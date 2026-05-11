@@ -154,7 +154,7 @@ int main()
 	sleep.start(STATESLEEP, TIMESLEEP);
 	thread bathT(&TimeAndStatus::rewriteFile, &bath, 7, 10);
 	bathT.detach();
-	thread foodT(&TimeAndStatus::rewriteFile, &food, 1, 10);
+	thread foodT(&TimeAndStatus::rewriteFile, &food, 3, 10);
 	foodT.detach();
 	thread playT(&TimeAndStatus::rewriteFile, &play, 5, 10);
 	playT.detach();
