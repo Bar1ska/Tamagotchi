@@ -21,7 +21,7 @@ int main()
 	system("mode con cols=54 lines=50");
 	int ind = 0;
 	char b;
-	string displayedButton [4] = {"Покормить", "Поиграть", "Помыть", "Уложить"};
+	string displayedButton[4] = { "Покормить", "Поиграть", "Помыть", "Уложить" };
 	string selectedButton[4] = { ">Покормить<", ">Поиграть<", ">Помыть<", ">Уложить<" };
 	Textures eating, crying, idle, lose, playing, sleeping, washing;
 	TimeAndStatus bath, food, play, sleep;
@@ -36,35 +36,40 @@ int main()
 	food.start(STATEFOOD, TIMEFOOD);
 	play.start(STATEPLAY, TIMEPLAY);
 	sleep.start(STATESLEEP, TIMESLEEP);
-	thread bathT(&TimeAndStatus::rewriteFile, &bath, 7, 10);
+	thread bathT(&TimeAndStatus::rewriteFile, &bath, 480, 20);
 	bathT.detach();
-	thread foodT(&TimeAndStatus::rewriteFile, &food, 3, 10);
+	thread foodT(&TimeAndStatus::rewriteFile, &food, 60, 20);
 	foodT.detach();
-	thread playT(&TimeAndStatus::rewriteFile, &play, 5, 10);
+	thread playT(&TimeAndStatus::rewriteFile, &play, 120, 20);
 	playT.detach();
-	thread sleepT(&TimeAndStatus::rewriteFile, &sleep, 10, 10);
+	thread sleepT(&TimeAndStatus::rewriteFile, &sleep, 720, 20);
 	sleepT.detach();
-	while (true) 
+	while (true)
 	{
 		system("CLS");
 		if (bath.readFile() == 0 || food.readFile() == 0 || play.readFile() == 0 || sleep.readFile() == 0)
 		{
 			lose.print();
 			stopFlag = true;
+			bath.clearFile();
+			food.clearFile();
+			play.clearFile();
+			sleep.clearFile();
 			return 0;
 		}
-		if (bath.readFile() <= 20 || food.readFile() <= 20 || play.readFile() <= 20 || sleep.readFile() <= 20)
+		else if (bath.readFile() <= 20 || food.readFile() <= 20 || play.readFile() <= 20 || sleep.readFile() <= 20)
 		{
 			crying.print();
-			stopFlag = true;
-			return 0;
 		}
-		idle.print();
-		cout << endl;
-		for (int i = 0; i < 54; ++i)
+		else
+		{
+			idle.print();
+		}
+		for (int i = 0; i < 53; ++i)
 		{
 			cout << "-";
 		}
+		cout << endl;
 		cout << "Сытость - " << food.readFile() << "\tws - выбор кнопки" << endl;
 		cout << "Игривость - " << play.readFile() << "\t enter - нажатие на кнопку" << endl;
 		cout << "Чистота - " << bath.readFile() << "\t x - выход из программы" << endl;
@@ -78,7 +83,21 @@ int main()
 		{
 			cout << displayedButton[i] << endl;
 		}
+
 		b = _getch();
+		if (b == 'ц')
+		{
+			b = 'w';
+		}
+		if (b == 'ы')
+		{
+			b = 's';
+		}
+		if (b == 'ч')
+		{
+			b = 'x';
+		}
+
 		switch (b)
 		{
 		case 'w':
@@ -96,7 +115,7 @@ int main()
 			}
 			break;
 		case '\r':
-			switch (ind) 
+			switch (ind)
 			{
 			case 0:
 				button(eating, food);

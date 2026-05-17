@@ -12,6 +12,7 @@ public:
 	void writeFile(int state, long timeFile);
 	void rewriteFile(int timePeriod, int deduction);
 	void addition(int deduction);
+	void clearFile();
 private:
 	int state = 100;
 	std::string pathState, pathTime, line;

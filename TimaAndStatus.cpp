@@ -48,7 +48,7 @@ void TimeAndStatus::writeFile(int state, long timeFile)
 
 void TimeAndStatus::rewriteFile(int timePeriod, int deduction)
 {
-	while (!stopFlag.load()) 
+	while (!stopFlag) 
 	{
 		fstream fileTime(pathTime, ios::in);
 		if (state != readFile())
@@ -59,7 +59,7 @@ void TimeAndStatus::rewriteFile(int timePeriod, int deduction)
 		}
 		if (time(0) - timeFile >= timePeriod * 60)
 		{
-			state -= deduction;
+			state -= deduction * ((time(0) - timeFile) / (timePeriod * 60));
 			if (state < 0)
 			{
 				state = 0;
@@ -81,4 +81,12 @@ void TimeAndStatus::addition(int deduction)
 		state = 100;
 	}
 	writeFile(state, time(0));
+}
+
+void TimeAndStatus::clearFile() 
+{
+	ofstream fileState(pathState);
+	ofstream fileTime(pathTime);
+	fileState.close();
+	fileTime.close();
 }
